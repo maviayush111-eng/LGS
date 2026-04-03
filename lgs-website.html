@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LGS – Institute of Development and Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --dark-green: #1F5E3B;
+    --forest-green: #2F7A4A;
+    --light-green: #EAF5E1;
+    --white: #FFFFFF;
+    --yellow: #F4C542;
+    --text-dark: #1A1A1A;
+    --text-muted: #4A5568;
+    --border: rgba(31,94,59,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    background: var(--white);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    height: 72px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-logo svg { width: 44px; height: 44px; }
+  .nav-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+  .nav-logo-text .brand { font-size: 17px; font-weight: 800; color: var(--dark-green); letter-spacing: -.5px; }
+  .nav-logo-text .sub { font-size: 10px; font-weight: 400; color: var(--text-muted); letter-spacing: .5px; text-transform: uppercase; }
+
+  .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+  .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--text-dark); transition: color .2s; }
+  .nav-links a:hover { color: var(--dark-green); }
+
+  .nav-cta {
+    background: var(--yellow); color: var(--dark-green);
+    border: none; padding: 10px 22px; border-radius: 8px;
+    font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all .2s; white-space: nowrap;
+    text-decoration: none; display: inline-block;
+  }
+  .nav-cta:hover { background: #e6b428; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(244,197,66,.4); }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--dark-green); border-radius: 2px; transition: all .3s; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--dark-green);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 100px 5% 80px;
+  }
+
+  /* Subtle geometric texture */
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(47,122,74,.35) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(244,197,66,.06) 0%, transparent 40%),
+      radial-gradient(circle at 60% 80%, rgba(47,122,74,.2) 0%, transparent 40%);
+  }
+
+  /* Grid lines */
+  .hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-inner {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(244,197,66,.15); border: 1px solid rgba(244,197,66,.3);
+    color: var(--yellow); font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; padding: 6px 14px; border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .hero-tag span { width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); animation: pulse 2s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+  .hero h1 {
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800; color: var(--white); line-height: 1.1;
+    letter-spacing: -1.5px; margin-bottom: 20px;
+  }
+  .hero h1 em { color: var(--yellow); font-style: normal; }
+
+  .hero-sub {
+    font-size: 16px; color: rgba(255,255,255,.72);
+    font-weight: 400; margin-bottom: 40px; max-width: 440px; line-height: 1.7;
+  }
+
+  .hero-buttons { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--yellow); color: var(--dark-green);
+    border: none; padding: 15px 32px; border-radius: 10px;
+    font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: all .2s; text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: #e6b428; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(244,197,66,.45); }
+
+  .btn-ghost {
+    background: transparent; color: rgba(255,255,255,.85);
+    border: 1px solid rgba(255,255,255,.25); padding: 15px 28px; border-radius: 10px;
+    font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 500;
+    cursor: pointer; transition: all .2s; text-decoration: none; display: inline-block;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,.6); color: var(--white); background: rgba(255,255,255,.06); }
+
+  /* Hero visual */
+  .hero-visual {
+    display: flex; justify-content: center; align-items: center;
+  }
+
+  .hero-card-stack { position: relative; width: 340px; height: 400px; }
+
+  .hero-card {
+    position: absolute; background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(8px); border-radius: 20px; padding: 24px;
+  }
+  .hero-card-main {
+    width: 300px; bottom: 0; left: 20px;
+    animation: float 6s ease-in-out infinite;
+  }
+  .hero-card-sm {
+    width: 220px; top: 20px; right: 0;
+    animation: float 6s ease-in-out infinite 1s;
+    background: rgba(244,197,66,.1);
+    border-color: rgba(244,197,66,.2);
+  }
+
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+  .card-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,.5); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .card-title { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+  .card-body { font-size: 13px; color: rgba(255,255,255,.65); line-height: 1.5; }
+  .card-pill {
+    display: inline-block; background: rgba(244,197,66,.2); color: var(--yellow);
+    font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; margin-top: 14px;
+  }
+
+  /* ── SECTION BASICS ── */
+  section { padding: 100px 5%; }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  .section-tag {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--forest-green); margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 4vw, 46px); font-weight: 800;
+    letter-spacing: -1px; line-height: 1.15; color: var(--text-dark);
+    margin-bottom: 16px;
+  }
+  .section-title em { color: var(--dark-green); font-style: normal; }
+
+  .section-sub {
+    font-size: 16px; color: var(--text-muted);
+    max-width: 560px; line-height: 1.7; margin-bottom: 60px;
+  }
+
+  /* ── PROBLEM ── */
+  .problem-section { background: var(--white); }
+
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px; margin-top: 60px;
+  }
+
+  .problem-card {
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px 28px;
+    transition: all .3s; position: relative; overflow: hidden;
+  }
+  .problem-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--dark-green); transform: scaleX(0); transform-origin: left;
+    transition: transform .3s;
+  }
+  .problem-card:hover { box-shadow: 0 12px 40px rgba(31,94,59,.1); transform: translateY(-4px); }
+  .problem-card:hover::before { transform: scaleX(1); }
+
+  .problem-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: var(--light-green); display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px; font-size: 24px;
+  }
+
+  .problem-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+  .problem-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+
+  /* ── SOLUTION ── */
+  .solution-section {
+    background: var(--dark-green); color: var(--white);
+  }
+
+  .solution-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+
+  .solution-section .section-tag { color: var(--yellow); }
+  .solution-section .section-title { color: var(--white); }
+  .solution-section .section-title em { color: var(--yellow); }
+  .solution-section .section-sub { color: rgba(255,255,255,.72); }
+
+  .solution-methods {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px;
+  }
+
+  .method-tag {
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+    padding: 14px 18px; border-radius: 10px; font-size: 14px; font-weight: 500;
+    color: rgba(255,255,255,.85); display: flex; align-items: center; gap: 10px;
+  }
+  .method-tag::before { content: '→'; color: var(--yellow); font-weight: 700; }
+
+  .solution-quote {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-left: 4px solid var(--yellow);
+    border-radius: 0 16px 16px 0; padding: 32px;
+    font-family: 'Lora', serif; font-size: 20px; font-style: italic;
+    color: rgba(255,255,255,.9); line-height: 1.65;
+  }
+
+  /* ── PROGRAMS ── */
+  .programs-section { background: var(--light-green); }
+
+  .programs-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 0;
+  }
+
+  .program-card {
+    background: var(--white); border-radius: 20px; overflow: hidden;
+    box-shadow: 0 2px 20px rgba(31,94,59,.07);
+    transition: all .3s;
+  }
+  .program-card:hover { box-shadow: 0 16px 48px rgba(31,94,59,.14); transform: translateY(-6px); }
+
+  .program-header {
+    background: var(--dark-green); padding: 28px 28px 24px;
+    position: relative; overflow: hidden;
+  }
+  .program-card:nth-child(2) .program-header { background: var(--forest-green); }
+  .program-card:nth-child(3) .program-header {
+    background: linear-gradient(135deg, #1F5E3B 0%, #2F7A4A 100%);
+  }
+
+  .program-grade {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.6); margin-bottom: 8px;
+  }
+  .program-title { font-size: 22px; font-weight: 800; color: var(--white); margin-bottom: 4px; }
+  .program-subtitle { font-size: 14px; color: rgba(255,255,255,.75); }
+
+  .program-body { padding: 28px; }
+  .program-skills { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .program-skills li {
+    font-size: 14px; color: var(--text-muted);
+    display: flex; align-items: flex-start; gap: 10px; line-height: 1.4;
+  }
+  .program-skills li::before {
+    content: ''; flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--light-green); border: 2px solid var(--forest-green);
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+
+  .program-badge {
+    margin-top: 24px; display: inline-block;
+    background: var(--light-green); color: var(--dark-green);
+    font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 100px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .hiw-section { background: var(--white); }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; position: relative; margin-top: 60px;
+  }
+  .steps::before {
+    content: ''; position: absolute; top: 32px; left: 10%; right: 10%;
+    height: 2px; background: linear-gradient(90deg, var(--light-green), var(--dark-green), var(--light-green));
+    z-index: 0;
+  }
+
+  .step { text-align: center; padding: 0 20px; position: relative; z-index: 1; }
+
+  .step-num {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--dark-green); color: var(--white);
+    font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px; position: relative;
+    box-shadow: 0 0 0 8px var(--white), 0 0 0 9px var(--light-green);
+  }
+
+  .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .step p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── IMPACT ── */
+  .impact-section { background: var(--light-green); }
+
+  .impact-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px; margin-top: 60px;
+  }
+
+  .impact-card {
+    background: var(--white); border-radius: 16px; padding: 32px 24px; text-align: center;
+    border: 1px solid rgba(31,94,59,.1);
+    transition: all .3s;
+  }
+  .impact-card:hover { box-shadow: 0 10px 32px rgba(31,94,59,.1); transform: translateY(-4px); }
+
+  .impact-icon { font-size: 36px; margin-bottom: 16px; display: block; }
+  .impact-card h3 { font-size: 17px; font-weight: 700; color: var(--dark-green); margin-bottom: 8px; }
+  .impact-card p { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+
+  /* ── BRAND SECTION ── */
+  .brand-section {
+    background: var(--dark-green);
+    text-align: center; padding: 100px 5%;
+    position: relative; overflow: hidden;
+  }
+  .brand-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(47,122,74,.4) 0%, transparent 60%);
+  }
+
+  .brand-logo-wrap { position: relative; z-index: 2; }
+  .brand-logo-wrap svg { width: 100px; height: 100px; margin-bottom: 32px; opacity: .95; }
+
+  .brand-tagline {
+    font-family: 'Lora', serif; font-size: clamp(28px, 5vw, 52px);
+    font-style: italic; color: var(--white); font-weight: 600;
+    line-height: 1.2; margin-bottom: 12px; position: relative; z-index: 2;
+  }
+  .brand-tagline em { color: var(--yellow); font-style: normal; font-family: 'Poppins'; font-weight: 800; }
+
+  .brand-sub { font-size: 16px; color: rgba(255,255,255,.6); position: relative; z-index: 2; }
+
+  /* ── CTA SECTION ── */
+  .cta-section { background: var(--white); text-align: center; padding: 100px 5%; }
+
+  .cta-box {
+    max-width: 700px; margin: 0 auto;
+    background: var(--light-green);
+    border: 1px solid rgba(31,94,59,.15);
+    border-radius: 28px; padding: 72px 56px;
+    position: relative; overflow: hidden;
+  }
+  .cta-box::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(31,94,59,.06);
+  }
+
+  .cta-box h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; letter-spacing: -.8px; margin-bottom: 16px; }
+  .cta-box p { font-size: 16px; color: var(--text-muted); margin-bottom: 40px; }
+
+  .btn-cta-large {
+    background: var(--dark-green); color: var(--white);
+    border: none; padding: 18px 44px; border-radius: 12px;
+    font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all .2s; text-decoration: none; display: inline-block;
+    margin-bottom: 16px;
+  }
+  .btn-cta-large:hover { background: var(--forest-green); transform: translateY(-2px); box-shadow: 0 14px 40px rgba(31,94,59,.3); }
+
+  .cta-note { font-size: 13px; color: var(--text-muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0F3020; color: rgba(255,255,255,.6);
+    padding: 60px 5% 32px;
+  }
+
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px;
+    padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,.08);
+    margin-bottom: 32px;
+  }
+
+  .footer-brand .nav-logo-text .brand { color: var(--white); }
+  .footer-brand .nav-logo-text .sub { color: rgba(255,255,255,.4); }
+  .footer-brand p { font-size: 14px; line-height: 1.65; margin-top: 16px; }
+
+  .footer-col h4 { font-size: 13px; font-weight: 700; color: var(--white); letter-spacing: .5px; margin-bottom: 20px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul li a { text-decoration: none; font-size: 14px; color: rgba(255,255,255,.55); transition: color .2s; }
+  .footer-col ul li a:hover { color: var(--yellow); }
+
+  .footer-bottom { max-width: 1200px; margin: 0 auto; font-size: 13px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .footer-bottom a { color: var(--yellow); text-decoration: none; }
+
+  /* ── MOBILE ── */
+  @media(max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+
+    .nav-links.open {
+      display: flex; flex-direction: column; position: fixed;
+      top: 72px; left: 0; right: 0; bottom: 0;
+      background: var(--white); padding: 32px 5%; gap: 24px; z-index: 998;
+    }
+    .nav-links.open li { border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero-visual { display: none; }
+    .solution-inner { grid-template-columns: 1fr; gap: 40px; }
+    .programs-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .steps::before { display: none; }
+    .footer-inner { grid-template-columns: 1fr; gap: 36px; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .cta-box { padding: 48px 28px; }
+    .solution-methods { grid-template-columns: 1fr; }
+  }
+
+  @media(max-width: 560px) {
+    section { padding: 72px 5%; }
+    .steps { grid-template-columns: 1fr; }
+    .problem-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Stagger children */
+  .stagger > * { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
+  .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:.05s }
+  .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:.15s }
+  .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.25s }
+  .stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:.35s }
+</style>
+</head>
+<body>
+
+<!-- ────────── NAVBAR ────────── -->
+<nav id="navbar">
+  <a href="#home" class="nav-logo">
+    <!-- LGS Logo: tree growing from open book with rising sun -->
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Book base -->
+      <path d="M12 54 Q40 48 68 54 L68 62 Q40 68 12 62 Z" fill="#1F5E3B"/>
+      <path d="M12 54 L40 48 L40 62 L12 62 Z" fill="#2F7A4A"/>
+      <path d="M40 48 L68 54 L68 62 L40 62 Z" fill="#2F7A4A" opacity=".8"/>
+      <!-- Book spine -->
+      <rect x="38" y="47" width="4" height="16" fill="#1F5E3B" rx="1"/>
+      <!-- Tree trunk -->
+      <rect x="37.5" y="30" width="5" height="20" fill="#1F5E3B" rx="2"/>
+      <!-- Tree branches / foliage -->
+      <circle cx="40" cy="26" r="14" fill="#2F7A4A"/>
+      <circle cx="30" cy="30" r="9" fill="#2F7A4A"/>
+      <circle cx="50" cy="30" r="9" fill="#2F7A4A"/>
+      <circle cx="40" cy="18" r="10" fill="#1F5E3B"/>
+      <!-- Sun rays -->
+      <circle cx="40" cy="12" r="5" fill="#F4C542"/>
+      <line x1="40" y1="4" x2="40" y2="6" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+      <line x1="52" y1="8" x2="50.5" y2="9.5" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+      <line x1="56" y1="20" x2="54" y2="20" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+      <line x1="28" y1="8" x2="29.5" y2="9.5" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+      <line x1="24" y1="20" x2="26" y2="20" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="nav-logo-text">
+      <span class="brand">LGS</span>
+      <span class="sub">Institute of Development & Learning</span>
+    </div>
+  </a>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#about">About Us</a></li>
+    <li><a href="#contact" class="nav-cta">Book a Demo</a></li>
+  </ul>
+
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ────────── HERO ────────── -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag"><span></span>School Programs · Grades 3–12</div>
+      <h1>Preparing Students for <em>Real Life</em>, Not Just Exams</h1>
+      <p class="hero-sub">Activity-based skill development programs for schools. Students learn by doing — building confidence, communication, and leadership that last a lifetime.</p>
+      <div class="hero-buttons">
+        <a href="#contact" class="btn-primary">Book a Demo Session</a>
+        <a href="#programs" class="btn-ghost">Explore Programs</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <div class="hero-card hero-card-sm">
+          <div class="card-label">Student Outcome</div>
+          <div class="card-title">Debate Champion</div>
+          <div class="card-body">Grade 8 student presents confidently in front of 200 peers.</div>
+          <div class="card-pill">Grade 6–8 Program</div>
+        </div>
+        <div class="hero-card hero-card-main">
+          <div class="card-label">This Week's Session</div>
+          <div class="card-title">Business Simulation Roleplay</div>
+          <div class="card-body">Students pitch solutions to real-world challenges to a mock board of investors — building critical thinking, confidence, and communication together.</div>
+          <div class="card-pill">Grades 9–12 · Leadership</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── PROBLEM ────────── -->
+<section class="problem-section" id="about">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">The Challenge</span>
+      <h2 class="section-title">Schools are great at teaching <em>content</em>.<br>But who teaches students to <em>thrive</em>?</h2>
+      <p class="section-sub">Despite strong academic performance, many students leave school unprepared for real-world demands. The gap between marks and capability is wider than ever.</p>
+    </div>
+    <div class="problem-grid stagger">
+      <div class="problem-card">
+        <div class="problem-icon">🗣️</div>
+        <h3>Weak Communication Skills</h3>
+        <p>Students can write answers but struggle to express ideas clearly in conversations, interviews, or presentations.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🪞</div>
+        <h3>Lack of Confidence</h3>
+        <p>Stage fright, hesitation, and self-doubt hold back talented students when it matters most — in public and professionally.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🌍</div>
+        <h3>No Real-World Exposure</h3>
+        <p>Curriculum rarely connects to how the world actually works — students graduate without encountering real challenges or decision-making.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🧩</div>
+        <h3>Passive Learning Culture</h3>
+        <p>Traditional classrooms reward memorisation. Creative thinking, collaboration, and initiative go undeveloped and unrewarded.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── SOLUTION ────────── -->
+<section class="solution-section">
+  <div class="container">
+    <div class="solution-inner">
+      <div class="reveal">
+        <span class="section-tag">Our Approach</span>
+        <h2 class="section-title">Learning that <em>sticks</em> because students <em>do it</em></h2>
+        <p class="section-sub">We deliver structured, activity-based sessions inside schools — where every student participates, performs, and grows.</p>
+        <div class="solution-methods stagger">
+          <div class="method-tag">Debates & Public Speaking</div>
+          <div class="method-tag">Roleplay & Simulations</div>
+          <div class="method-tag">Content Creation</div>
+          <div class="method-tag">Real-World Challenges</div>
+          <div class="method-tag">Team Projects</div>
+          <div class="method-tag">Capstone Presentations</div>
+        </div>
+      </div>
+      <div class="reveal">
+        <p class="solution-quote">"We don't lecture students about confidence — we put them in situations where they have no choice but to find it."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── PROGRAMS ────────── -->
+<section class="programs-section" id="programs">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:52px">
+      <span class="section-tag">Curriculum</span>
+      <h2 class="section-title">Programs designed for <em>every stage</em> of growth</h2>
+      <p class="section-sub">Each program is built around the developmental needs of that age group — progressively building skills from creativity to leadership.</p>
+    </div>
+    <div class="programs-grid stagger">
+      <!-- Grade 3–5 -->
+      <div class="program-card">
+        <div class="program-header">
+          <div class="program-grade">Grades 3 – 5</div>
+          <div class="program-title">Creativity &amp; Confidence</div>
+          <div class="program-subtitle">Building the Foundation</div>
+        </div>
+        <div class="program-body">
+          <ul class="program-skills">
+            <li>Expressive storytelling and imagination activities</li>
+            <li>Show-and-tell, drama, and group games</li>
+            <li>Building comfort speaking in front of peers</li>
+            <li>Encouraging curiosity and creative thinking</li>
+          </ul>
+          <span class="program-badge">Weekly · 45 min sessions</span>
+        </div>
+      </div>
+      <!-- Grade 6–8 -->
+      <div class="program-card">
+        <div class="program-header">
+          <div class="program-grade">Grades 6 – 8</div>
+          <div class="program-title">Communication &amp; Critical Thinking</div>
+          <div class="program-subtitle">Finding Their Voice</div>
+        </div>
+        <div class="program-body">
+          <ul class="program-skills">
+            <li>Structured debates and argument framing</li>
+            <li>Roleplay scenarios and perspective-taking</li>
+            <li>Collaborative problem-solving challenges</li>
+            <li>Presentation skills and audience awareness</li>
+          </ul>
+          <span class="program-badge">Weekly · 60 min sessions</span>
+        </div>
+      </div>
+      <!-- Grade 9–12 -->
+      <div class="program-card">
+        <div class="program-header">
+          <div class="program-grade">Grades 9 – 12</div>
+          <div class="program-title">Leadership &amp; Real-World Skills</div>
+          <div class="program-subtitle">Ready for What's Next</div>
+        </div>
+        <div class="program-body">
+          <ul class="program-skills">
+            <li>Business simulations and decision-making exercises</li>
+            <li>Content creation and digital communication</li>
+            <li>Leadership projects and peer mentoring</li>
+            <li>Capstone presentations to external audiences</li>
+          </ul>
+          <span class="program-badge">Weekly · 75 min sessions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── HOW IT WORKS ────────── -->
+<section class="hiw-section">
+  <div class="container">
+    <div class="reveal" style="text-align:center; margin-bottom: 0">
+      <span class="section-tag">How It Works</span>
+      <h2 class="section-title">Simple for schools.<br><em>Transformative</em> for students.</h2>
+    </div>
+    <div class="steps stagger">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>School Partners with LGS</h3>
+        <p>We align with your schedule and curriculum goals — zero disruption, full integration.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Weekly Activity Sessions Begin</h3>
+        <p>Our facilitators run structured, high-energy sessions within your school premises.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Students Perform &amp; Participate</h3>
+        <p>Every student is active — debating, creating, presenting, and collaborating.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Capstone Showcase</h3>
+        <p>Students present their growth in a final showcase — visible results for schools, parents, and students.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── IMPACT ────────── -->
+<section class="impact-section">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:0">
+      <span class="section-tag">What Changes</span>
+      <h2 class="section-title">The difference you <em>see and feel</em></h2>
+      <p class="section-sub">Impact isn't a number on a report card. It's the moment a quiet student speaks up, or a hesitant child leads a team.</p>
+    </div>
+    <div class="impact-grid stagger">
+      <div class="impact-card">
+        <span class="impact-icon">✨</span>
+        <h3>Improved Confidence</h3>
+        <p>Students willingly speak in front of groups — in class, at events, and in life.</p>
+      </div>
+      <div class="impact-card">
+        <span class="impact-icon">🗣️</span>
+        <h3>Better Communication</h3>
+        <p>Ideas are expressed clearly, persuasively, and with intention — not just memorised answers.</p>
+      </div>
+      <div class="impact-card">
+        <span class="impact-icon">🙋</span>
+        <h3>Higher Participation</h3>
+        <p>Classrooms become more alive — students initiate, engage, and take ownership.</p>
+      </div>
+      <div class="impact-card">
+        <span class="impact-icon">🤝</span>
+        <h3>Stronger Teamwork</h3>
+        <p>Collaboration replaces competition — students learn to lead and follow with equal ease.</p>
+      </div>
+      <div class="impact-card">
+        <span class="impact-icon">🧠</span>
+        <h3>Independent Thinking</h3>
+        <p>Students question, analyse, and form their own views — not just repeat what they've been told.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── BRAND SECTION ────────── -->
+<section class="brand-section">
+  <div class="brand-logo-wrap">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 54 Q40 48 68 54 L68 62 Q40 68 12 62 Z" fill="rgba(255,255,255,.25)"/>
+      <path d="M12 54 L40 48 L40 62 L12 62 Z" fill="rgba(255,255,255,.35)"/>
+      <path d="M40 48 L68 54 L68 62 L40 62 Z" fill="rgba(255,255,255,.28)"/>
+      <rect x="38" y="47" width="4" height="16" fill="rgba(255,255,255,.4)" rx="1"/>
+      <rect x="37.5" y="30" width="5" height="20" fill="rgba(255,255,255,.5)" rx="2"/>
+      <circle cx="40" cy="26" r="14" fill="rgba(255,255,255,.25)"/>
+      <circle cx="30" cy="30" r="9" fill="rgba(255,255,255,.2)"/>
+      <circle cx="50" cy="30" r="9" fill="rgba(255,255,255,.2)"/>
+      <circle cx="40" cy="18" r="10" fill="rgba(255,255,255,.3)"/>
+      <circle cx="40" cy="12" r="5" fill="#F4C542"/>
+      <line x1="40" y1="4" x2="40" y2="6" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+      <line x1="52" y1="8" x2="50.5" y2="9.5" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+      <line x1="56" y1="20" x2="54" y2="20" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+      <line x1="28" y1="8" x2="29.5" y2="9.5" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+      <line x1="24" y1="20" x2="26" y2="20" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <p class="brand-tagline">Students don't just learn.<br>They <em>perform</em>.</p>
+    <p class="brand-sub">LGS – Institute of Development and Learning</p>
+  </div>
+</section>
+
+<!-- ────────── CTA ────────── -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="cta-box reveal">
+      <span class="section-tag">For School Principals</span>
+      <h2>Let your students experience <em>real</em> learning</h2>
+      <p>Book a free 30-minute demo session. We'll show you exactly what happens in a live LGS classroom — and what it does to students.</p>
+      <a href="mailto:demo@lgs.edu" class="btn-cta-large">Schedule a Free Demo</a>
+      <p class="cta-note">No commitment required · Works around your school calendar</p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── FOOTER ────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#home" class="nav-logo" style="text-decoration:none">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:40px;height:40px">
+          <path d="M12 54 Q40 48 68 54 L68 62 Q40 68 12 62 Z" fill="rgba(255,255,255,.2)"/>
+          <path d="M12 54 L40 48 L40 62 L12 62 Z" fill="rgba(255,255,255,.3)"/>
+          <path d="M40 48 L68 54 L68 62 L40 62 Z" fill="rgba(255,255,255,.22)"/>
+          <rect x="38" y="47" width="4" height="16" fill="rgba(255,255,255,.35)" rx="1"/>
+          <rect x="37.5" y="30" width="5" height="20" fill="rgba(255,255,255,.45)" rx="2"/>
+          <circle cx="40" cy="26" r="14" fill="rgba(255,255,255,.2)"/>
+          <circle cx="30" cy="30" r="9" fill="rgba(255,255,255,.15)"/>
+          <circle cx="50" cy="30" r="9" fill="rgba(255,255,255,.15)"/>
+          <circle cx="40" cy="18" r="10" fill="rgba(255,255,255,.25)"/>
+          <circle cx="40" cy="12" r="5" fill="#F4C542"/>
+          <line x1="40" y1="4" x2="40" y2="6" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+          <line x1="52" y1="8" x2="50.5" y2="9.5" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+          <line x1="56" y1="20" x2="54" y2="20" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+          <line x1="28" y1="8" x2="29.5" y2="9.5" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+          <line x1="24" y1="20" x2="26" y2="20" stroke="#F4C542" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="nav-logo-text" style="margin-left:10px">
+          <span class="brand">LGS</span>
+          <span class="sub">Institute of Development & Learning</span>
+        </div>
+      </a>
+      <p style="margin-top:20px">Activity-based skill development programs that prepare students for real life — not just exams.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Programs</h4>
+      <ul>
+        <li><a href="#programs">Grades 3–5: Creativity</a></li>
+        <li><a href="#programs">Grades 6–8: Communication</a></li>
+        <li><a href="#programs">Grades 9–12: Leadership</a></li>
+        <li><a href="#contact">Book a Demo</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 LGS – Institute of Development and Learning. All rights reserved.</span>
+    <span>Designed to inspire.</span>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+  document.querySelectorAll('#navLinks a').forEach(a => {
+    a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal, .stagger').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
